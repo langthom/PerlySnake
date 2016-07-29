@@ -1,0 +1,22 @@
+
+               PerlySnake
+               ----------
+
+PerlySnake is a simple clone of the classic game
+'Snake' written entirely in the Perl programming
+language using OpenGL / GLUT.
+
+To run the game, simply clone this repository and 
+type  
+
+               './snake.pl' 
+
+on the command line, assumed that at least
+Perl 5.10, GLUT is installed and the script has
+corresponding rights set.
+
+-------------------------------------------------
+This is a translation and adjusted version of the
+game written by Lars Heppert in his book 
+"Coding for fun mit Python".
+
