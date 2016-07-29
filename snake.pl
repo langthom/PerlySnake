@@ -63,11 +63,28 @@ sub getLevelName {
     return LEVEL_DIR . "Level" . $idx;
 }
 
+# Restarts the game, including loading the (new) level.
+sub restart_game {
+    my $score = shift // 0;
+    glFinish;
+    $playground = Playground->new;
+    $snake      = Snake->new($playground, $score);
+    @direction  = (0, 0);
+    @commands   = ();
+    $playground->loadLevel(getLevelName($cur_lvl_idx));
+}
+
 # Handle keyboard input (Arrow keys).
 sub kbd {
     my ($key) = @_;
 
     switch ($key) {
+        # First and only cheat in this game:
+        # hop to level 4 (or the last level) immediately
+        case 27 { # ESC key
+            $cur_lvl_idx = 4 <= $MAXIMUM_LEVEL_INDEX ? 4 : $MAXIMUM_LEVEL_INDEX;
+            restart_game;
+        }
         case GLUT_KEY_UP    { push @commands, ( 0, -1); }
         case GLUT_KEY_DOWN  { push @commands, ( 0,  1); }
         case GLUT_KEY_LEFT  { push @commands, (-1,  0); }
@@ -105,17 +122,6 @@ sub show_ascii_art {
     draw_element(\@ascii_art, [APPLE_COLOR]);
     glutSwapBuffers;
     sleep($GAME_OVER_DELAY);
-}
-
-# Restarts the game, including loading the (new) level.
-sub restart_game {
-    my $score = shift // 0;
-    glFinish;
-    $playground = Playground->new;
-    $snake      = Snake->new($playground, $score);
-    @direction  = (0, 0);
-    @commands   = ();
-    $playground->loadLevel(getLevelName($cur_lvl_idx));
 }
 
 # Prints the score in bold green on the console.
@@ -272,5 +278,6 @@ $playground->loadLevel(getLevelName($cur_lvl_idx));
 
 glutDisplayFunc(\&draw);
 glutSpecialFunc(\&kbd);
+glutKeyboardFunc(\&kbd);
 glutTimerFunc($DELAY, \&timer, 0);
 glutMainLoop;

@@ -12,17 +12,16 @@ use warnings;
 use lib '.';
 use SnakeConfig;
 
-# How much longer does the snake get when eating an apple?
-use constant EXPANSION => 1;
-
 # Internal constants defining different types of collisions.
 use constant NO_COLLISION =>  0;
 use constant COLLISION    => -1;
 use constant EAT_APPLE    => -2;
 use constant PASS_EXIT    => -3;
 
+my $config = SnakeConfig::snake_config;
 # How many points on score per apple?
-my $POINTS_PER_APPLE = SnakeConfig::snake_config->{"POINTS_PER_APPLE"};
+my $POINTS_PER_APPLE = $config->{"POINTS_PER_APPLE"};
+my $APPLE_EXPANSION  = $config->{"APPLE_EXPANSION"};
 
 sub new {
     my $class = shift;
@@ -46,7 +45,7 @@ sub move {
     my $_coll = $plgr->collision_detection(@newHead);
     
     if ($_coll eq EAT_APPLE) {
-        $self->{_expansion} += EXPANSION;
+        $self->{_expansion} += $APPLE_EXPANSION;
         $self->{_score} += $POINTS_PER_APPLE;
     }
     
